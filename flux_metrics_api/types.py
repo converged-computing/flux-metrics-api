@@ -6,6 +6,31 @@
 from datetime import datetime
 
 import flux_metrics_api.defaults as defaults
+from flux_metrics_api.metrics import metrics
+
+
+def new_resource_list():
+    """
+    The root of the server returns the api list with available metrics.
+    """
+    listing = {
+        "kind": "APIResourceList",
+        "apiVersion": defaults.API_VERSION(),
+        "groupVersion": defaults.API_ENDPOINT,
+        "resources": [],
+    }
+
+    for metric_name in metrics:
+        listing["resources"].append(
+            {
+                "name": f"service/{metric_name}",
+                "singularName": metric_name,
+                "namespaced": False,
+                "kind": "MetricValueList",
+                "verbs": ["get"],
+            }
+        )
+    return listing
 
 
 def new_identifier(name: str, selector: dict = None):

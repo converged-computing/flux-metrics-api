@@ -25,11 +25,12 @@ class Root(HTTPEndpoint):
     """
     Root of the API
 
-    This needs to return 200 for a health check
+    This needs to return 200 for a health check. I later discovered it also needs
+    to return the listing of available metrics!
     """
 
     async def get(self, request):
-        return JSONResponse({})
+        return JSONResponse(types.new_api_resource_list())
 
 
 def get_metric(request):
