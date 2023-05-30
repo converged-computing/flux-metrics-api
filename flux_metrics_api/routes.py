@@ -30,7 +30,7 @@ class Root(HTTPEndpoint):
     """
 
     async def get(self, request):
-        return JSONResponse(types.new_api_resource_list())
+        return JSONResponse(types.new_resource_list())
 
 
 def get_metric(request):
