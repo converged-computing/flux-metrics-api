@@ -33,7 +33,7 @@ def new_metric(metric, value, time="", windowSeconds=0):
         "apiVersion": defaults.API_VERSION(),
     }
     return {
-        "metricName": metric['name'],
+        "metricName": metric["name"],
         "value": value,
         "timestamp": time,
         "describedObject": describedObject,
