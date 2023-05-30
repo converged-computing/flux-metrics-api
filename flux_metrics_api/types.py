@@ -51,4 +51,4 @@ def new_metric_list(metrics, metadata=None):
     }
     if metadata is not None:
         listing["metadata"] = metadata
-    return metadata
+    return listing
