@@ -25,7 +25,7 @@ def new_resource_list():
             {
                 "name": f"service/{metric_name}",
                 "singularName": metric_name,
-                "namespaced": False,
+                "namespaced": True,
                 "kind": "MetricValueList",
                 "verbs": ["get"],
             }
