@@ -23,7 +23,7 @@ def new_resource_list():
     for metric_name in metrics:
         listing["resources"].append(
             {
-                "name": f"service/{metric_name}",
+                "name": metric_name,
                 "singularName": metric_name,
                 "namespaced": True,
                 "kind": "MetricValueList",
