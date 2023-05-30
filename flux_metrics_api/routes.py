@@ -3,26 +3,16 @@
 #
 # SPDX-License-Identifier: (MIT)
 
+from apispec import APISpec
 from starlette.endpoints import HTTPEndpoint
 from starlette.responses import JSONResponse
 from starlette.routing import Route
-from starlette.schemas import SchemaGenerator
+from starlette_apispec import APISpecSchemaGenerator
 
 import flux_metrics_api.defaults as defaults
 import flux_metrics_api.types as types
 import flux_metrics_api.version as version
 from flux_metrics_api.metrics import metrics
-
-schemas = SchemaGenerator(
-    {
-        "openapi": "3.0.0",
-        "info": {"title": "Flux Metrics API", "version": version.__version__},
-    }
-)
-
-from apispec import APISpec
-from apispec.ext.marshmallow import MarshmallowPlugin
-from starlette_apispec import APISpecSchemaGenerator
 
 schemas = APISpecSchemaGenerator(
     APISpec(
@@ -30,7 +20,6 @@ schemas = APISpecSchemaGenerator(
         version=version.__version__,
         openapi_version="3.0.0",
         info={"description": "Export Flux custom metrics."},
-        plugins=[MarshmallowPlugin()],
     )
 )
 
@@ -95,11 +84,7 @@ class Metric(HTTPEndpoint):
 def openapi_schema(request):
     """
     Get the openapi spec from the endpoints
-
-    TODO: debug why paths empty. For now I'm adding them manually.
     """
-    #print(schemas.get_schema())
-    #return schemas.OpenAPIResponse(request=request)
     return JSONResponse(schemas.get_schema(routes=routes))
 
 
