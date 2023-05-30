@@ -1,0 +1,33 @@
+{
+    "name": "Flux Metrics API",
+    "dockerFile": "Dockerfile",
+    "context": "../",
+
+    "customizations": {
+      "vscode": {
+        "settings": {
+          "terminal.integrated.defaultProfile.linux": "bash",
+
+          "python.autoComplete.extraPaths": [
+            "/usr/local/lib/flux/python3.8",
+            "/usr/local/lib/python3.8/site-packages",
+            "/workspaces/flux-core/src/bindings/python"
+          ],
+          "python.analysis.extraPaths": [
+            "/usr/local/lib/flux/python3.8",
+            "/usr/local/lib/python3.8/site-packages",
+            "/workspaces/flux-core/src/bindings/python"
+          ]
+        },
+        "extensions": [
+          "ms-python.python"
+        ]
+      }
+    },
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    }
+  },
+  "postStartCommand": "git config --global --add safe.directory /workspaces/flux-metrics-api"
+}

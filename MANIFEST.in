@@ -1,0 +1,14 @@
+include README.md
+include COPYRIGHT
+recursive-include flux_metrics_api *.png
+recursive-include flux_metrics_api *.sh
+recursive-include flux_metrics_api *
+recursive-include * *.png
+prune env*
+global-exclude .env
+global-exclude *.py[co]
+recursive-exclude .git *
+global-exclude __pycache__
+prune docs*
+prune flux_metrics_api/tests
+prune apigen
