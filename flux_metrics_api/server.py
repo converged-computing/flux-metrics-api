@@ -65,8 +65,8 @@ def get_parser():
     )
     start.add_argument(
         "--port",
-        help="Port to run application",
-        default=8080,
+        help="Port to run application (defaults to 8443)",
+        default=8443,
         type=int,
     )
     start.add_argument(
@@ -78,7 +78,6 @@ def get_parser():
         help="Custom API path (defaults to /apis/custom.metrics.k8s.io/v1beta2)",
         default=None,
     )
-
     start.add_argument(
         "--host",
         help="Host address to run application",
@@ -90,6 +89,8 @@ def get_parser():
         default=False,
         action="store_true",
     )
+    start.add_argument("--ssl-keyfile", help="full path to ssl keyfile")
+    start.add_argument("--ssl-certfile", help="full path to ssl certfile")
     return parser
 
 
@@ -97,8 +98,20 @@ def start(args):
     """
     Start the server with uvicorn
     """
+    # Validate certificates if provided
+    if args.ssl_keyfile and not args.ssl_certfile:
+        sys.exit("A --ssl-keyfile was provided without a --ssl-certfile.")
+    if args.ssl_certfile and not args.ssl_keyfile:
+        sys.exit("A --ssl-certfile was provided without a --ssl-keyfile.")
+
     app = Starlette(debug=args.debug, routes=routes)
-    uvicorn.run(app, host=args.host, port=args.port)
+    uvicorn.run(
+        app,
+        host=args.host,
+        port=args.port,
+        ssl_keyfile=args.ssl_keyfile,
+        ssl_certfile=args.ssl_certfile,
+    )
 
 
 def main():
