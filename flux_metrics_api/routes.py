@@ -81,6 +81,15 @@ class Metric(HTTPEndpoint):
         return get_metric(request)
 
 
+class APIGroupList(HTTPEndpoint):
+    """
+    Service a faux resource list just for our custom metrics endpoint.
+    """
+
+    async def get(self, request):
+        return types.new_group_list()
+
+
 def openapi_schema(request):
     """
     Get the openapi spec from the endpoints
@@ -91,7 +100,8 @@ def openapi_schema(request):
 # STOPPED HERE - make open api spec s we can see endpoints and query
 routes = [
     Route(defaults.API_ROOT, Root),
-    # Optional for openapi, we could add if needed
+    # This is a faux route so we can get the preferred resource version
+    Route(defaults.API_ROOT + "/apis", APIGroupList),
     Route(defaults.API_ROOT + "/namespaces/{namespace}/metrics/{metric_name}", Metric),
     Route(defaults.API_ROOT + "/{resource}/{name}/{metric_name}", Metric),
     Route(

@@ -73,6 +73,31 @@ def new_metric(metric, value, timestamp="", windowSeconds=0):
     }
 
 
+def new_group_list():
+    """
+    Return a faux group list to get the version of the custom metrics API
+    """
+    return {
+        "kind": "APIGroupList",
+        "apiVersion": "v1",
+        "groups": [
+            {
+                "name": "custom.metrics.k8s.io",
+                "versions": [
+                    {
+                        "groupVersion": defaults.API_ENDPOINT,
+                        "version": defaults.API_VERSION(),
+                    }
+                ],
+                "preferredVersion": {
+                    "groupVersion": defaults.API_ENDPOINT,
+                    "version": defaults.API_VERSION(),
+                },
+            }
+        ],
+    }
+
+
 def new_metric_list(metrics, metadata=None):
     """
     Put list of metrics into proper list format
