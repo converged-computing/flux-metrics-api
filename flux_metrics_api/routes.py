@@ -98,6 +98,7 @@ def openapi_schema(request):
 
     TODO: debug why paths empty. For now I'm adding them manually.
     """
+    print(schemas.get_schemas())
     return schemas.OpenAPIResponse(request=request)
 
 
