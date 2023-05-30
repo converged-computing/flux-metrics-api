@@ -41,18 +41,13 @@ def get_metric(request):
     """
     metric_name = request.path_params["metric_name"]
     namespace = request.path_params.get("namespace")
+    print(f"Requested metric {metric_name} in  namespace {namespace}")
 
-    if (
-        namespace is not None
-        and defaults.NAMESPACES is not None
-        and namespace not in defaults.NAMESPACES
-    ):
-        return JSONResponse(
-            {"detail": "This namespace is not known to the server."}, status_code=404
-        )
-
+    # TODO we don't do anything with namespace currently, we assume we won't
+    # be able to hit this if running in the wrong one
     # Unknown metric
     if metric_name not in metrics:
+        print(f"Unknown metric requested {metric_name}")
         return JSONResponse(
             {"detail": "This metric is not known to the server."}, status_code=404
         )
