@@ -21,6 +21,7 @@ schemas = SchemaGenerator(
 )
 
 from apispec import APISpec
+from apispec.ext.marshmallow import MarshmallowPlugin
 from starlette_apispec import APISpecSchemaGenerator
 
 schemas = APISpecSchemaGenerator(
@@ -29,8 +30,10 @@ schemas = APISpecSchemaGenerator(
         version=version.__version__,
         openapi_version="3.0.0",
         info={"description": "Export Flux custom metrics."},
+        plugins=[MarshmallowPlugin()],
     )
 )
+
 
 class Root(HTTPEndpoint):
     """
@@ -96,6 +99,7 @@ def openapi_schema(request):
     TODO: debug why paths empty. For now I'm adding them manually.
     """
     return schemas.OpenAPIResponse(request=request)
+
 
 #    return JSONResponse(schemas.get_schema(routes=routes))
 
