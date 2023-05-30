@@ -63,7 +63,10 @@ def get_metric(request):
     # Get the value from Flux, assemble into listing
     value = metrics[metric_name]()
     metric_value = types.new_metric(metric, value=value)
-    listing = types.new_metric_list([metric_value])
+
+    # Give the endpoint for the service as metadata
+    metadata = {"selfLink": defaults.API_ROOT}
+    listing = types.new_metric_list([metric_value], metadata=metadata)
     return JSONResponse(listing)
 
 

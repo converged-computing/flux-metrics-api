@@ -69,8 +69,9 @@ def get_parser():
         default=8443,
         type=int,
     )
+    start.add_argument("--namespace", help="Namespace the API is running in")
     start.add_argument(
-        "--namespace", help="Scope to running in these namespace(s)", action="append"
+        "--service-name", help="Service name the metrics service is running from"
     )
     start.add_argument(
         "--api-path",
@@ -144,14 +145,18 @@ def main():
     )
 
     # Setup the registry - non verbose is default
-    print(f"API endpoint is at {defaults.API_ROOT}")
     if args.api_path is not None:
-        print(f"Setting API endpoint to {args.api_path}")
         defaults.API_ROOT = args.api_path
+    print(f"API endpoint is at {defaults.API_ROOT}")
 
-    # Limit to specific namespaces?
+    # Set namespace or service name to be different than defaults
     if args.namespace:
-        defaults.NAMESPACES = args.namespace
+        defaults.NAMESPACE = args.namespace
+    print(f"Running from namespace {defaults.NAMESPACE}")
+
+    if args.service_name:
+        defaults.SERVICE_NAME = args.service_name
+    print(f"Service name {defaults.SERVICE_NAME}")
 
     # Does the user want a shell?
     if args.command == "start":

@@ -16,7 +16,7 @@ def new_identifier(name: str, selector: dict = None):
     return metric
 
 
-def new_metric(metric, value, time="", windowSeconds=0, describedObject=None):
+def new_metric(metric, value, time="", windowSeconds=0):
     """
     Get the metric value for an object.
 
@@ -25,21 +25,30 @@ def new_metric(metric, value, time="", windowSeconds=0, describedObject=None):
     which the metric was calculated (0 for instantaneous, which is what we are making).
     describedObject is the object the metric was collected from.
     """
+    # Our custom metrics API always comes from a service
+    describedObject = {
+        "kind": "Service",
+        "namespace": defaults.NAMESPACE,
+        "name": defaults.SERVICE_NAME,
+        "apiVersion": defaults.API_VERSION(),
+    }
     return {
-        "metric": metric,
+        "metricName": metric,
         "value": value,
-        "time": time,
-        "windowSeconds": windowSeconds,
+        "timestamp": time,
         "describedObject": describedObject,
     }
 
 
-def new_metric_list(metrics):
+def new_metric_list(metrics, metadata=None):
     """
     Put list of metrics into proper list format
     """
-    return {
+    listing = {
         "items": metrics,
-        "apiVersion": defaults.API_VERSION,
+        "apiVersion": defaults.API_ENDPOINT,
         "kind": "MetricValueList",
     }
+    if metadata is not None:
+        listing["metadata"] = metadata
+    return metadata
