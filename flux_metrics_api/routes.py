@@ -98,11 +98,9 @@ def openapi_schema(request):
 
     TODO: debug why paths empty. For now I'm adding them manually.
     """
-    print(schemas.get_schemas())
-    return schemas.OpenAPIResponse(request=request)
-
-
-#    return JSONResponse(schemas.get_schema(routes=routes))
+    #print(schemas.get_schema())
+    #return schemas.OpenAPIResponse(request=request)
+    return JSONResponse(schemas.get_schema(routes=routes))
 
 
 # STOPPED HERE - make open api spec s we can see endpoints and query
