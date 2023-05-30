@@ -3,6 +3,8 @@
 #
 # SPDX-License-Identifier: (MIT)
 
+from datetime import datetime
+
 import flux_metrics_api.defaults as defaults
 
 
@@ -11,12 +13,14 @@ def new_identifier(name: str, selector: dict = None):
     Get a new metric identifier.
     """
     metric = {"name": name}
+
+    # A selector would be a label on a metric (we don't have any currently)
     if selector is not None:
         metric["selector"] = selector
     return metric
 
 
-def new_metric(metric, value, time="", windowSeconds=0):
+def new_metric(metric, value, timestamp="", windowSeconds=0):
     """
     Get the metric value for an object.
 
@@ -25,6 +29,9 @@ def new_metric(metric, value, time="", windowSeconds=0):
     which the metric was calculated (0 for instantaneous, which is what we are making).
     describedObject is the object the metric was collected from.
     """
+    # This probably needs work - I just fudged it for now
+    timestamp = timestamp or datetime.now().strftime("%Y-%m-%dT%H:%M:%S+00:00")
+
     # Our custom metrics API always comes from a service
     describedObject = {
         "kind": "Service",
@@ -33,9 +40,10 @@ def new_metric(metric, value, time="", windowSeconds=0):
         "apiVersion": defaults.API_VERSION(),
     }
     return {
-        "metricName": metric["name"],
+        "metric": metric,
         "value": value,
-        "timestamp": time,
+        "timestamp": timestamp,
+        "windowSeconds": windowSeconds,
         "describedObject": describedObject,
     }
 

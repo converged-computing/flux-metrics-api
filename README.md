@@ -115,6 +115,11 @@ or
 $ docker run -it -p 8443:8443 ghcr.io/converged-computing/flux-metrics-api
 ```
 
+### Development
+
+Note that this is implemented in Python, but (I found this after) we could [also use Go](https://github.com/kubernetes-sigs/custom-metrics-apiserver).
+Specifically, I found this repository useful to see the [spec format](https://github.com/kubernetes-sigs/custom-metrics-apiserver/blob/master/pkg/generated/openapi/custommetrics/zz_generated.openapi.go).
+
 You can then open up the browser at [http://localhost:8443/metrics/](http://localhost:8443/metrics) to see
 the metrics!
 
