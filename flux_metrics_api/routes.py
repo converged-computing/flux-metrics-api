@@ -101,7 +101,7 @@ def openapi_schema(request):
 routes = [
     Route(defaults.API_ROOT, Root),
     # This is a faux route so we can get the preferred resource version
-    # Route("/apis", APIGroupList),
+    Route("/apis", APIGroupList),
     Route(defaults.API_ROOT + "/namespaces/{namespace}/metrics/{metric_name}", Metric),
     Route(defaults.API_ROOT + "/{resource}/{name}/{metric_name}", Metric),
     Route(
