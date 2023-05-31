@@ -90,6 +90,12 @@ def get_parser():
         default=False,
         action="store_true",
     )
+    start.add_argument(
+        "--no-cache",
+        help="Do not cache Kubernetes API responses.",
+        default=False,
+        action="store_true",
+    )
     start.add_argument("--ssl-keyfile", help="full path to ssl keyfile")
     start.add_argument("--ssl-certfile", help="full path to ssl certfile")
     return parser
@@ -148,6 +154,10 @@ def main():
     if args.api_path is not None:
         defaults.API_ROOT = args.api_path
     print(f"API endpoint is at {defaults.API_ROOT}")
+
+    # Do not cache responses
+    if args.no_cache is True:
+        defaults.USE_CACHE = False
 
     # Set namespace or service name to be different than defaults
     if args.namespace:

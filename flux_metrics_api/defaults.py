@@ -7,6 +7,7 @@ API_ENDPOINT = "custom.metrics.k8s.io/v1beta2"
 API_ROOT = "/apis/custom.metrics.k8s.io/v1beta2"
 NAMESPACE = "flux-operator"
 SERVICE_NAME = "custom-metrics-apiserver"
+USE_CACHE = True
 
 
 def API_VERSION():

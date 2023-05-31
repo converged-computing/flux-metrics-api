@@ -7,13 +7,20 @@ import json
 import os
 import subprocess
 
+import flux_metrics_api.defaults as defaults
 import flux_metrics_api.utils as utils
+
+# Global cache of responses
+cache = {}
 
 
 def get_kubernetes_endpoint(endpoint):
     """
     Get an endpoint from the cluster.
     """
+    if defaults.USE_CACHE and endpoint in cache:
+        return cache[endpoint]
+
     # Point to the internal API server hostname
     api_server = "https://kubernetes.default.svc"
 
@@ -40,7 +47,7 @@ def get_kubernetes_endpoint(endpoint):
         shell=True,
     )
     try:
-        output = json.loadss(output)
+        output = json.loads(output)
     except Exception:
         return {}
     return output
