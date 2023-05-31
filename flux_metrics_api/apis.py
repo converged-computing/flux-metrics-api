@@ -43,7 +43,7 @@ def get_kubernetes_endpoint(endpoint):
     # res = requests.get(f"{api_server}/apis", headers=headers, verify=cert_file)
     # Kids don't do this at home
     output = subprocess.check_output(
-        f'curl --cacert {cert_file} --header "Authorization: Bearer {token}" -X GET {api_server}/{endpoint}',
+        f'curl -s --cacert {cert_file} --header "Authorization: Bearer {token}" -X GET {api_server}/{endpoint}',
         shell=True,
     )
     try:
