@@ -48,6 +48,7 @@ def get_kubernetes_endpoint(endpoint):
     )
     try:
         output = json.loads(output)
+        cache[endpoint] = output
     except Exception:
         return {}
     return output
