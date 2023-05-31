@@ -87,7 +87,13 @@ class APIGroupList(HTTPEndpoint):
     """
 
     async def get(self, request):
-        return JSONResponse(types.new_group_list())
+        listing = types.new_group_list()
+        if not listing:
+            return JSONResponse(
+                {"detail": "The metric server is not running in a Kubernetes pod."},
+                status_code=404,
+            )
+        return JSONResponse(listing)
 
 
 def openapi_schema(request):
