@@ -1,7 +1,7 @@
 FROM fluxrm/flux-sched:focal
 
 # docker build -t flux_metrics_api .
-# docker run -it -p 8080:8080 flux_metrics_api
+# docker run -it -p 8443:8443 flux_metrics_api
 
 LABEL maintainer="Vanessasaurus <@vsoch>"
 

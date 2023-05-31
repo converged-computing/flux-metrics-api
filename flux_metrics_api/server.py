@@ -65,12 +65,13 @@ def get_parser():
     )
     start.add_argument(
         "--port",
-        help="Port to run application",
-        default=8080,
+        help="Port to run application (defaults to 8443)",
+        default=8443,
         type=int,
     )
+    start.add_argument("--namespace", help="Namespace the API is running in")
     start.add_argument(
-        "--namespace", help="Scope to running in these namespace(s)", action="append"
+        "--service-name", help="Service name the metrics service is running from"
     )
     start.add_argument(
         "--api-path",
@@ -78,7 +79,6 @@ def get_parser():
         help="Custom API path (defaults to /apis/custom.metrics.k8s.io/v1beta2)",
         default=None,
     )
-
     start.add_argument(
         "--host",
         help="Host address to run application",
@@ -90,6 +90,14 @@ def get_parser():
         default=False,
         action="store_true",
     )
+    start.add_argument(
+        "--no-cache",
+        help="Do not cache Kubernetes API responses.",
+        default=False,
+        action="store_true",
+    )
+    start.add_argument("--ssl-keyfile", help="full path to ssl keyfile")
+    start.add_argument("--ssl-certfile", help="full path to ssl certfile")
     return parser
 
 
@@ -97,8 +105,20 @@ def start(args):
     """
     Start the server with uvicorn
     """
+    # Validate certificates if provided
+    if args.ssl_keyfile and not args.ssl_certfile:
+        sys.exit("A --ssl-keyfile was provided without a --ssl-certfile.")
+    if args.ssl_certfile and not args.ssl_keyfile:
+        sys.exit("A --ssl-certfile was provided without a --ssl-keyfile.")
+
     app = Starlette(debug=args.debug, routes=routes)
-    uvicorn.run(app, host=args.host, port=args.port)
+    uvicorn.run(
+        app,
+        host=args.host,
+        port=args.port,
+        ssl_keyfile=args.ssl_keyfile,
+        ssl_certfile=args.ssl_certfile,
+    )
 
 
 def main():
@@ -131,14 +151,22 @@ def main():
     )
 
     # Setup the registry - non verbose is default
-    print(f"API endpoint is at {defaults.API_ROOT}")
     if args.api_path is not None:
-        print(f"Setting API endpoint to {args.api_path}")
         defaults.API_ROOT = args.api_path
+    print(f"API endpoint is at {defaults.API_ROOT}")
 
-    # Limit to specific namespaces?
+    # Do not cache responses
+    if args.no_cache is True:
+        defaults.USE_CACHE = False
+
+    # Set namespace or service name to be different than defaults
     if args.namespace:
-        defaults.NAMESPACES = args.namespace
+        defaults.NAMESPACE = args.namespace
+    print(f"Running from namespace {defaults.NAMESPACE}")
+
+    if args.service_name:
+        defaults.SERVICE_NAME = args.service_name
+    print(f"Service name {defaults.SERVICE_NAME}")
 
     # Does the user want a shell?
     if args.command == "start":

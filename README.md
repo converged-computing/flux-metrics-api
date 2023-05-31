@@ -46,7 +46,7 @@ You'll want to be running in a Flux instance, as we need to connect to the broke
 $ flux start --test-size=4
 ```
 
-And then start the server. This will use a default port and host (0.0.0.0:8080) that you can customize
+And then start the server. This will use a default port and host (0.0.0.0:8443) that you can customize
 if desired.
 
 ```bash
@@ -54,6 +54,12 @@ $ flux-metrics-api start
 
 # customize the port or host
 $ flux-metrics-api start --port 9000 --host 127.0.0.1
+```
+
+If you want ssl (port 443) you can provide the path to a certificate and keyfile:
+
+```bash
+$ flux-metrics-api start --ssl-certfile /etc/certs/tls.crt --ssl-keyfile /etc/certs/tls.key
 ```
 
 See `--help` to see other options available.
@@ -67,7 +73,7 @@ See `--help` to see other options available.
 Here is an example to get the "node_up_count" metric:
 
 ```bash
- curl -s http://localhost:8080/apis/custom.metrics.k8s.io/v1beta2/namespaces/flux-operator/metrics/node_up_count | jq
+ curl -s http://localhost:8443/apis/custom.metrics.k8s.io/v1beta2/namespaces/flux-operator/metrics/node_up_count | jq
 ```
 ```console
 {
@@ -101,15 +107,20 @@ be a demo. You can either build it yourself, or use our build.
 
 ```bash
 $ docker build -t flux_metrics_api .
-$ docker run -it -p 8080:8080 flux_metrics_api
+$ docker run -it -p 8443:8443 flux_metrics_api
 ```
 or
 
 ```bash
-$ docker run -it -p 8080:8080 ghcr.io/converged-computing/flux-metrics-api
+$ docker run -it -p 8443:8443 ghcr.io/converged-computing/flux-metrics-api
 ```
 
-You can then open up the browser at [http://localhost:8080/metrics/](http://localhost:8080/metrics) to see
+### Development
+
+Note that this is implemented in Python, but (I found this after) we could [also use Go](https://github.com/kubernetes-sigs/custom-metrics-apiserver).
+Specifically, I found this repository useful to see the [spec format](https://github.com/kubernetes-sigs/custom-metrics-apiserver/blob/master/pkg/generated/openapi/custommetrics/zz_generated.openapi.go).
+
+You can then open up the browser at [http://localhost:8443/metrics/](http://localhost:8443/metrics) to see
 the metrics!
 
 ## 😁️ Contributors 😁️

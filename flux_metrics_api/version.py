@@ -18,6 +18,7 @@ LICENSE = "LICENSE"
 INSTALL_REQUIRES = (
     ("uvicorn", {"min_version": None}),
     ("starlette", {"min_version": None}),
+    ("starlette-apispec", {"min_version": None}),
 )
 
 TESTS_REQUIRES = (("pytest", {"min_version": "4.6.2"}),)
