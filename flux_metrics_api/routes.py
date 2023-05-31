@@ -87,7 +87,7 @@ class APIGroupList(HTTPEndpoint):
     """
 
     async def get(self, request):
-        return types.new_group_list()
+        return JSONResponse(types.new_group_list())
 
 
 def openapi_schema(request):
