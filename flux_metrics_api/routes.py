@@ -118,7 +118,6 @@ def openapi_schema(request):
     return JSONResponse(schemas.get_schema(routes=routes))
 
 
-# STOPPED HERE - make open api spec s we can see endpoints and query
 routes = [
     Route(defaults.API_ROOT, Root),
     # This is a faux route so we can get the preferred resource version
@@ -130,6 +129,7 @@ routes = [
         defaults.API_ROOT + "/namespaces/{namespace}/{resource}/{name}/{metric_name}",
         Metric,
     ),
-    # Route("/openapi/v2", openapi_schema, include_in_schema=False),
+    # These are for our endpoints
+    Route("/schema", openapi_schema, include_in_schema=False),
     Route(f"{defaults.API_ROOT}/openapi/v2", openapi_schema, include_in_schema=False),
 ]

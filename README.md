@@ -62,6 +62,12 @@ If you want ssl (port 443) you can provide the path to a certificate and keyfile
 $ flux-metrics-api start --ssl-certfile /etc/certs/tls.crt --ssl-keyfile /etc/certs/tls.key
 ```
 
+An example of a full command we might run from within a pod:
+
+```bash
+$ flux-metrics-api start --port 8443 --ssl-certfile /etc/certs/tls.crt --ssl-keyfile /etc/certs/tls.key --namespace flux-operator --service-name custom-metrics-apiserver
+```
+
 See `--help` to see other options available.
 
 ### Endpoints
@@ -82,14 +88,22 @@ Here is an example to get the "node_up_count" metric:
       "metric": {
         "name": "node_up_count"
       },
-      "value": 4,
-      "time": "",
+      "value": 2,
+      "timestamp": "2023-05-31T04:44:57+00:00",
       "windowSeconds": 0,
-      "describedObject": null
+      "describedObject": {
+        "kind": "Service",
+        "namespace": "flux-operator",
+        "name": "custom-metrics-apiserver",
+        "apiVersion": "v1beta2"
+      }
     }
   ],
   "apiVersion": "custom.metrics.k8s.io/v1beta2",
-  "kind": "MetricValueList"
+  "kind": "MetricValueList",
+  "metadata": {
+    "selfLink": "/apis/custom.metrics.k8s.io/v1beta2"
+  }
 }
 ```
 

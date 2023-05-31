@@ -1,3 +1,6 @@
 env/
 prometheus_flux.egg-info
 __pycache__
+dist
+flux_metrics_api.egg-info
+.eggs
