@@ -10,20 +10,6 @@ import subprocess
 import flux_metrics_api.utils as utils
 
 
-def get_api_group_list():
-    """
-    Get the API group list, assuming we are inside a pod.
-    """
-    return get_kubernetes_endpoint("apis")
-
-
-def get_cluster_schema(version="v2"):
-    """
-    Get the API group list, assuming we are inside a pod.
-    """
-    return get_kubernetes_endpoint(f"openapi/{version}")
-
-
 def get_kubernetes_endpoint(endpoint):
     """
     Get an endpoint from the cluster.

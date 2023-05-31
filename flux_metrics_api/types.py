@@ -14,7 +14,21 @@ def new_group_list():
     """
     Return a faux group list to get the version of the custom metrics API
     """
-    return apis.get_api_group_list()
+    return apis.get_kubernetes_endpoint("apis")
+
+
+def get_api_group_list():
+    """
+    Get the API group list, assuming we are inside a pod.
+    """
+    return apis.get_kubernetes_endpoint("apis")
+
+
+def get_cluster_schema(version="v2"):
+    """
+    Get the API group list, assuming we are inside a pod.
+    """
+    return apis.get_kubernetes_endpoint(f"openapi/{version}")
 
 
 def new_resource_list():
