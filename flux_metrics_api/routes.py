@@ -23,6 +23,11 @@ schemas = APISpecSchemaGenerator(
     )
 )
 
+not_found_response = JSONResponse(
+    {"detail": "The metric server is not running in a Kubernetes pod."},
+    status_code=404,
+)
+
 
 class Root(HTTPEndpoint):
     """
@@ -89,11 +94,21 @@ class APIGroupList(HTTPEndpoint):
     async def get(self, request):
         listing = types.new_group_list()
         if not listing:
-            return JSONResponse(
-                {"detail": "The metric server is not running in a Kubernetes pod."},
-                status_code=404,
-            )
+            return not_found_response
         return JSONResponse(listing)
+
+
+class OpenAPI(HTTPEndpoint):
+    """
+    Forward the cluster openapi endpoint
+    """
+
+    async def get(self, request):
+        version = request.path_params["version"]
+        openapi = types.get_cluster_schema(version)
+        if not openapi:
+            return not_found_response
+        return JSONResponse(openapi)
 
 
 def openapi_schema(request):
@@ -108,6 +123,7 @@ routes = [
     Route(defaults.API_ROOT, Root),
     # This is a faux route so we can get the preferred resource version
     Route("/apis", APIGroupList),
+    Route("/openapi/{version}", OpenAPI),
     Route(defaults.API_ROOT + "/namespaces/{namespace}/metrics/{metric_name}", Metric),
     Route(defaults.API_ROOT + "/{resource}/{name}/{metric_name}", Metric),
     Route(

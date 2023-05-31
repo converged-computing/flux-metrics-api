@@ -17,6 +17,13 @@ def get_api_group_list():
     return get_kubernetes_endpoint("apis")
 
 
+def get_cluster_schema(version="v2"):
+    """
+    Get the API group list, assuming we are inside a pod.
+    """
+    return get_kubernetes_endpoint(f"openapi/{version}")
+
+
 def get_kubernetes_endpoint(endpoint):
     """
     Get an endpoint from the cluster.
@@ -43,7 +50,7 @@ def get_kubernetes_endpoint(endpoint):
     # res = requests.get(f"{api_server}/apis", headers=headers, verify=cert_file)
     # Kids don't do this at home
     output = subprocess.check_output(
-        f'curl -s --cacert {cert_file} --header "Authorization: Bearer {token}" -X GET {api_server}/{endpoint}',
+        f'curl --cacert {cert_file} --header "Authorization: Bearer {token}" -X GET {api_server}/{endpoint}',
         shell=True,
     )
     try:
