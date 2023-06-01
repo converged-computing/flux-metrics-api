@@ -56,6 +56,8 @@ $ flux-metrics-api start
 $ flux-metrics-api start --port 9000 --host 127.0.0.1
 ```
 
+#### SSL
+
 If you want ssl (port 443) you can provide the path to a certificate and keyfile:
 
 ```bash
@@ -66,6 +68,52 @@ An example of a full command we might run from within a pod:
 
 ```bash
 $ flux-metrics-api start --port 8443 --ssl-certfile /etc/certs/tls.crt --ssl-keyfile /etc/certs/tls.key --namespace flux-operator --service-name custom-metrics-apiserver
+```
+
+#### On the fly custom metrics!
+
+If you want to provide custom metrics, you can write a function in an external file that we will read it and add to the server.
+As a general rule:
+
+ - The name of the function will be the name of the custom metric
+ - You can expect the only argument to be the flux handle
+ - You'll need to do imports within your function to get them in scope
+
+This likely can be improved upon, but is a start for now! We provide an [example file](example/custom-metrics.py). As an example:
+
+```bash
+$ flux-metrics-api start --custom-metric ./example/custom-metrics.py
+```
+
+And then test it:
+
+```bash
+$ curl -s http://localhost:8443/apis/custom.metrics.k8s.io/v1beta2/namespaces/flux-operator/metrics/my_custom_metric_name | jq
+```
+```console
+{
+  "items": [
+    {
+      "metric": {
+        "name": "my_custom_metric_name"
+      },
+      "value": 4,
+      "timestamp": "2023-06-01T01:39:08+00:00",
+      "windowSeconds": 0,
+      "describedObject": {
+        "kind": "Service",
+        "namespace": "flux-operator",
+        "name": "custom-metrics-apiserver",
+        "apiVersion": "v1beta2"
+      }
+    }
+  ],
+  "apiVersion": "custom.metrics.k8s.io/v1beta2",
+  "kind": "MetricValueList",
+  "metadata": {
+    "selfLink": "/apis/custom.metrics.k8s.io/v1beta2"
+  }
+}
 ```
 
 See `--help` to see other options available.
@@ -113,6 +161,14 @@ The following metrics are supported:
  - **node_free_count**: number of nodes free in the MiniCluster
  - **node_cores_free_count**: number of node cores free in the MiniCluster
  - **node_cores_up_count**: number of node cores up in the MiniCluster
+ - **job_queue_state_new_count**: number of new jobs in the queue
+ - **job_queue_state_depend_count**: number of jobs in the queue in state "depend"
+ - **job_queue_state_priority_count**: number of jobs in the queue in state "priority"
+ - **job_queue_state_sched_count**: number of jobs in the queue in state "sched"
+ - **job_queue_state_run_count**: number of jobs in the queue in state "run"
+ - **job_queue_state_cleanup_count**: number of jobs in the queue in state "cleanup"
+ - **job_queue_state_inactive_count**: number of jobs in the queue in state "inactive"
+
 
 ### Docker
 
