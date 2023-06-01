@@ -14,6 +14,7 @@ from starlette.applications import Starlette
 
 import flux_metrics_api
 import flux_metrics_api.defaults as defaults
+import flux_metrics_api.metrics as metrics
 from flux_metrics_api.logger import setup_logger
 from flux_metrics_api.routes import routes
 
@@ -73,6 +74,7 @@ def get_parser():
     start.add_argument(
         "--service-name", help="Service name the metrics service is running from"
     )
+    start.add_argument("--custom-metric", help="A Python file with custom metrics")
     start.add_argument(
         "--api-path",
         dest="api_path",
@@ -111,6 +113,9 @@ def start(args):
     if args.ssl_certfile and not args.ssl_keyfile:
         sys.exit("A --ssl-certfile was provided without a --ssl-keyfile.")
 
+    # The user wants to add a file with custom metrics
+    if args.custom_metric:
+        metrics.add_custom_metrics(args.custom_metric)
     app = Starlette(debug=args.debug, routes=routes)
     uvicorn.run(
         app,

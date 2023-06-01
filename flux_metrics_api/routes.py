@@ -12,7 +12,7 @@ from starlette_apispec import APISpecSchemaGenerator
 import flux_metrics_api.defaults as defaults
 import flux_metrics_api.types as types
 import flux_metrics_api.version as version
-from flux_metrics_api.metrics import metrics
+from flux_metrics_api.metrics import custom_metrics, handle, metrics
 
 schemas = APISpecSchemaGenerator(
     APISpec(
@@ -55,7 +55,7 @@ def get_metric(request):
     # TODO we don't do anything with namespace currently, we assume we won't
     # be able to hit this if running in the wrong one
     # Unknown metric
-    if metric_name not in metrics:
+    if metric_name not in metrics and metric_name not in custom_metrics:
         print(f"Unknown metric requested {metric_name}")
         return JSONResponse(
             {"detail": "This metric is not known to the server."}, status_code=404
@@ -65,7 +65,10 @@ def get_metric(request):
     metric = types.new_identifier(metric_name)
 
     # Get the value from Flux, assemble into listing
-    value = metrics[metric_name]()
+    if metric_name in custom_metrics:
+        value = custom_metrics[metric_name](handle)
+    else:
+        value = metrics[metric_name]()
     metric_value = types.new_metric(metric, value=value)
 
     # Give the endpoint for the service as metadata
