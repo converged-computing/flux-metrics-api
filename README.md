@@ -4,6 +4,7 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PyPI](https://img.shields.io/pypi/v/flux-metrics-api)](https://pypi.org/project/flux-metrics-api/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12802643.svg)](https://doi.org/10.5281/zenodo.12802643)
 
 This is an experiment to create a metrics API for Kubernetes that can be run directly from the Flux
 leader broker pod. We made this after creating [prometheus-flux](https://github.com/converged-computing/prometheus-flux)
